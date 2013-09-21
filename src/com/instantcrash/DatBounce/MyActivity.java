@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class MyActivity extends Activity {
+
+    private static final String TAG = "MyActivity";
 
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
@@ -38,11 +41,12 @@ public class MyActivity extends Activity {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
+                Log.d(TAG, "peer(s) found");
             }
 
             @Override
             public void onFailure(int i) {
-
+                Log.d(TAG, "no peer found, "+i);
             }
         });
     }
