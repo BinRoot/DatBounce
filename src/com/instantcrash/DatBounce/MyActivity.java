@@ -57,10 +57,8 @@ public class MyActivity extends Activity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         registerReceiver(mReceiver, mIntentFilter);
-    }
 
 
-    public void onlineButtonPressed(View v) {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -72,6 +70,12 @@ public class MyActivity extends Activity {
                 Log.d(TAG, "no peer found, "+i);
             }
         });
+    }
+
+
+    public void onlineButtonPressed(View v) {
+
+
     }
 
     public void connectTo(final String addr, String name) {
