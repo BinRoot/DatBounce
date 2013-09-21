@@ -85,6 +85,7 @@ public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String result) {
         if (result != null) {
             Toast.makeText(context, "DATA SENT!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "send data");
         }
     }
 

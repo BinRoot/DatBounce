@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class SocketListener implements Runnable {
@@ -14,12 +15,29 @@ public class SocketListener implements Runnable {
     private OutputStream oStream;
     private static final String TAG = "SocketListener";
 
-    public SocketListener(Socket socket) {
-        this.socket = socket;
+    String mHostAddr;
+    int mPort;
+
+//    public SocketListener(Socket socket) {
+//        this.socket = socket;
+//    }
+
+    public SocketListener(String hostAddr, int port) {
+        this.socket = new Socket();
+        this.mHostAddr = hostAddr;
+        this.mPort = port;
     }
 
     @Override
     public void run() {
+
+        try {
+            socket.bind(null);
+            socket.connect(new InetSocketAddress(mHostAddr, mPort), 5000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         try {
             iStream = socket.getInputStream();
             oStream = socket.getOutputStream();

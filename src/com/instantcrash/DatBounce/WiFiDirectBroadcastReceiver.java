@@ -92,18 +92,13 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                         Log.d(TAG, "host addr: "+hostAddr);
 
                         if (wifiP2pInfo.isGroupOwner) {
+                            Log.d(TAG, "is group owner");
                             new FileServerAsyncTask(context).execute();
                         } else {
-                            Socket socket = new Socket();
-                            Log.d(TAG, "Launching the I/O handler");
-                            try {
-                                socket.bind(null);
-                                socket.connect(new InetSocketAddress(hostAddr, 8888), 5000);
-                                SocketListener socketListener = new SocketListener(socket);
-                                new Thread(socketListener).start();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            Log.d(TAG, "is peer");
+                            SocketListener socketListener = new SocketListener(hostAddr, 8888);
+                            new Thread(socketListener).start();
+
                         }
                     }
                 });
