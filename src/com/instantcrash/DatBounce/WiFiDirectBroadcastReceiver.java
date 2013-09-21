@@ -11,6 +11,10 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "WiFiDirectBroadcastReceiver";
@@ -29,7 +33,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         String action = intent.getAction();
 
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
@@ -83,8 +87,24 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
                     @Override
                     public void onConnectionInfoAvailable(WifiP2pInfo wifiP2pInfo) {
+
                         String hostAddr = wifiP2pInfo.groupOwnerAddress.getHostAddress();
                         Log.d(TAG, "host addr: "+hostAddr);
+
+                        if (wifiP2pInfo.isGroupOwner) {
+                            new FileServerAsyncTask(context).execute();
+                        } else {
+                            Socket socket = new Socket();
+                            Log.d(TAG, "Launching the I/O handler");
+                            try {
+                                socket.bind(null);
+                                socket.connect(new InetSocketAddress(hostAddr, 8888), 5000);
+                                SocketListener socketListener = new SocketListener(socket);
+                                new Thread(socketListener).start();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 });
             } else {
