@@ -61,7 +61,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                             String name = device.deviceName;
                             Log.d(TAG, "peer available: ["+addr+"] "+name);
 
-                            mActivity.connectTo(addr, name);
+                            mActivity.updatePeer(addr, name);
                         }
                     }
                 });

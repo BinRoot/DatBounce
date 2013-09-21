@@ -10,6 +10,10 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.*;
+
+import java.util.ArrayList;
 
 public class MyActivity extends Activity {
 
@@ -21,10 +25,26 @@ public class MyActivity extends Activity {
 
     IntentFilter mIntentFilter;
 
+    ListView peerList;
+    ArrayAdapter<String> peerAdapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        peerList = (ListView) findViewById(R.id.peer_list);
+        peerAdapter = new ArrayAdapter<String>(this.getApplicationContext(), android.R.layout.simple_list_item_1);
+        peerList.setAdapter(peerAdapter);
+
+        peerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String addr = (String)peerList.getItemAtPosition(i);
+                Toast.makeText(getApplicationContext(), "clicked "+addr, Toast.LENGTH_SHORT).show();
+                connectTo(addr, "noname");
+            }
+        });
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
@@ -38,6 +58,7 @@ public class MyActivity extends Activity {
 
         registerReceiver(mReceiver, mIntentFilter);
     }
+
 
     public void onlineButtonPressed(View v) {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
@@ -73,6 +94,14 @@ public class MyActivity extends Activity {
             }
         });
     }
+
+    public void updatePeer(String addr, String name) {
+        if (peerAdapter.getPosition(addr) <= 0) {
+            peerAdapter.add(addr);
+            peerAdapter.notifyDataSetChanged();
+        }
+    }
+
 
 
     /* register the broadcast receiver with the intent values to be matched */
