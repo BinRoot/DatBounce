@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +52,28 @@ public class MyActivity extends Activity {
             }
         });
     }
+
+    public void connectTo(final String addr, String name) {
+        //obtain a peer from the WifiP2pDeviceList
+        WifiP2pDevice device;
+        final WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = addr;
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                //success logic
+                Log.d(TAG, "connected to "+addr);
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                //failure logic
+                Log.d(TAG, "could not connected to "+addr);
+            }
+        });
+    }
+
 
     /* register the broadcast receiver with the intent values to be matched */
     @Override

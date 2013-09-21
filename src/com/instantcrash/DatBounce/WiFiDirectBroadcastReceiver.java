@@ -15,9 +15,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
-    private Activity mActivity;
+    private MyActivity mActivity;
 
-    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, Activity activity) {
+    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, MyActivity activity) {
         super();
         this.mManager = manager;
         this.mChannel = channel;
@@ -60,6 +60,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                             String addr = device.deviceAddress;
                             String name = device.deviceName;
                             Log.d(TAG, "peer available: ["+addr+"] "+name);
+
+                            mActivity.connectTo(addr, name);
                         }
                     }
                 });
