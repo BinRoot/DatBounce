@@ -47,7 +47,12 @@ public class MyActivity extends Activity {
         });
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
+        mChannel = mManager.initialize(this, getMainLooper(), new WifiP2pManager.ChannelListener() {
+            @Override
+            public void onChannelDisconnected() {
+                Log.d(TAG, "channel disconnected");
+            }
+        });
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
 
         mIntentFilter = new IntentFilter();
@@ -117,7 +122,6 @@ public class MyActivity extends Activity {
     /* unregister the broadcast receiver */
     @Override
     protected void onDestroy() {
-        super.onPause();
         unregisterReceiver(mReceiver);
     }
 }
