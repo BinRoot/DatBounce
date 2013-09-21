@@ -123,5 +123,6 @@ public class MyActivity extends Activity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(mReceiver);
+        super.onDestroy();
     }
 }
